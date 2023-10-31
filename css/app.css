@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+.button-add-book {
+  color: #212529;
+}
+.button-add-book:hover {
+  color: #f8f9fa;
+}
+
 .container-books {
   display: flex;
   flex-direction: row;

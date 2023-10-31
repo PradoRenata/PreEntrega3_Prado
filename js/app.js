@@ -47,7 +47,14 @@ const books = [
         autor: 'Britney Spears',
         image: 'https://images.cdn1.buscalibre.com/fit-in/360x360/d2/ae/d2aebc204783107b162198290118bee9.jpg',
     },
+    {
+        id: 'a121',
+        title: 'Humano Es',
+        autor: 'Philip K. Dick',
+        image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/7a/95/7a95f2681a07bbf37e6108a906c43ccb.jpg',
+    },
 ];
+
 
 //----------- LISTAR LIBROS 
 const container = document.querySelector('.container-books');
@@ -169,7 +176,59 @@ function showBooklist() {
 
 }
 
-showBooklist()
+showBooklist();
+updateButtonState();
 
+
+//----------- AGREGAR LIBROS
+const formBook = document.querySelector('#form-book');
+const message = document.querySelector('#message')
+
+let nextId = 1;
+
+formBook.addEventListener('submit', addBook);
+
+function addBook(e){
+    e.preventDefault();
+
+    const title = formBook.title.value;
+    const autor = formBook.autor.value; 
+    const image = formBook.image.value;  
+
+    if(title && autor && image){
+        const newBook = {
+            id: `book-${nextId}`,
+            title,
+            autor,
+            image,
+        }
+
+        books.push(newBook);
+
+        container.innerHTML += ` 
+        <div id=${newBook.id} class="card card-book">
+        <img src=${newBook.image} alt="Portada ${newBook.title}" class="book-thumbnail">
+        <div class="card-body">
+            <h4 class="card-title">${newBook.title}</h4>
+            <p class="card-text">${newBook.autor}</p>
+            <div class="list-group">
+                <button type="button" class="btn btn-dark list-group-item" onclick="addToMyBooklist('${newBook.id}')" id="add-${newBook.id}">Agregar a mi lista</button>
+            </div>
+        </div>
+    </div>`;
+
+        nextId++;
+
+        formBook.reset();
+
+        message.innerHTML = `${newBook.title}, agregado con exito!`
+    } else {
+        message.innerHTML = `Por favor. Completa todos los campos.`
+    }
+
+}
+
+showBooklist();
+updateButtonState();
 
 

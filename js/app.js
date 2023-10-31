@@ -36,13 +36,13 @@ const books = [
         image: 'https://images.cdn1.buscalibre.com/fit-in/360x360/46/80/4680f1138f6d913f1dcade06b4c06e4b.jpg',
     },
     {
-        id: 'a128',
+        id: 'a129',
         title: 'Los hijos de Húrin',
         autor: 'J.R.R Tolkien',
         image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/60/a5/60a5fe0237975ca21e1e950c586c3307.jpg',
     },
     {
-        id: 'a128',
+        id: 'a120',
         title: 'La mujer que soy',
         autor: 'Britney Spears',
         image: 'https://images.cdn1.buscalibre.com/fit-in/360x360/d2/ae/d2aebc204783107b162198290118bee9.jpg',
@@ -60,7 +60,116 @@ for (const book of books) {
             <h4 class="card-title">${book.title}</h4>
             <p class="card-text">${book.autor}</p>
             <div class="list-group">
-                <button type="button" class="btn btn-dark list-group-item" onclick="AddToMyList('${book.id}')" id="add-${book.id}">Agregar a mi lista</button>
+                <button type="button" class="btn btn-dark list-group-item" onclick="addToMyBooklist('${book.id}')" id="add-${book.id}">Agregar a mi lista</button>
             </div>
         </div>
     </div>`;}
+
+//----------- MOSTRAR MI LISTA / ACTUALIZADA SI TIENE LISBROS INGRESADOS
+let myListOfBooks = [];
+
+if (localStorage.getItem('listOfBooks')){
+    myListOfBooks = JSON.parse(localStorage.getItem('listOfBooks'));
+    console.log(myListOfBooks)
+    updateButtonState();
+    showBooklist();
+}
+
+//----------- ACTUALIZAR BOTON DE LA CARD
+function updateButtonState() {
+    books.forEach((book) => {
+        const btnAdd = document.getElementById(`add-${book.id}`);
+        if (myListOfBooks.some((item) => item.id === book.id)) {
+            btnAdd.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
+            btnAdd.disabled = true; 
+        } else {
+            btnAdd.innerHTML = 'Agregar a mi lista';
+            btnAdd.disabled = false; 
+        }
+    });
+}
+
+
+//----------- AGREGAR A LA LISTA    
+function addToMyBooklist(id){
+    const lectures = books.find((book) => book.id === id);
+
+    if(lectures && !myListOfBooks.some((item) => item.id === id)){
+        
+        const btnAdd = document.getElementById(`add-${id}`);
+        btnAdd.innerHTML = '<i class="fa-solid fa-bookmark"></i>'; //Cambia el texto interior
+        btnAdd.disabled = true; //Deshabilita el botón
+        
+        myListOfBooks.push(lectures);
+        localStorage.setItem('listOfBooks', JSON.stringify(myListOfBooks));
+        console.log(myListOfBooks);
+
+        showBooklist();
+        updateButtonState();
+    }
+}
+
+//----------- BORRAR LIBRO DE LA LISTA
+const BooklistElement = document.querySelector('.booklist');
+BooklistElement.addEventListener('click', function (e) {
+    if (e.target && e.target.classList.contains('delete-button')) {
+        const idDelete = e.target.getAttribute('data-id');
+        deleteBook(idDelete);
+    }
+});
+
+function deleteBook(id){
+    const index = myListOfBooks.findIndex((item) => item.id === id);
+    if(index !== -1){
+        myListOfBooks.splice(index , 1) // elimina el producto
+
+        localStorage.setItem('listOfBooks',JSON.stringify(myListOfBooks)); //actualiza el carrito
+
+        const BooklistElement = document.querySelector('.booklist'); //Elimina elemento del carrito en el DOM
+        const itemElement = document.getElementById(id);
+
+        if(itemElement){
+            itemElement.remove();
+        }
+
+        showBooklist();
+        updateButtonState();
+    }
+}
+
+//----------- MOSTRAR LISTA
+function showBooklist() {
+    const BooklistElement = document.querySelector('.booklist');
+    BooklistElement.innerHTML = '';
+
+    myListOfBooks.forEach((item) => {
+        const BooklistItem = document.createElement('div');
+        BooklistItem.classList.add('carrito-item');
+        BooklistItem.innerHTML = `
+        <div id=${item.id} class="card-booklist">
+        <img src=${item.image} alt="Portada ${item.title}" class="booklist-thumbnail">
+        <div class="card-body">
+            <h4 class="card-title">${item.title}</h4>
+            <p class="card-text">${item.autor}</p>
+            <div class="list-group">
+            <button class="btn btn-outline-warning delete-button" data-id=${item.id}><i class="fa-solid fa-trash"></i> Quitar de mi lista</button>
+            </div>
+        </div>
+    </div>
+        `;
+
+        const deleteButton = BooklistItem.querySelector('.delete-button');
+        deleteButton.addEventListener('click',() =>{
+            deleteBook(item.id);
+        });
+
+        BooklistElement.appendChild(BooklistItem);
+
+    })
+
+}
+
+showBooklist()
+
+
+

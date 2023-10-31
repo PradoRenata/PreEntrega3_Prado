@@ -20,4 +20,20 @@
   object-fit: cover;
 }
 
+.booklist {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.booklist .card-booklist {
+  display: flex;
+  align-items: center;
+}
+.booklist .card-booklist .booklist-thumbnail {
+  height: 140px;
+  aspect-ratio: 10/16;
+  object-fit: cover;
+}
+
 /*# sourceMappingURL=app.css.map */

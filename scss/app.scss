@@ -21,3 +21,21 @@
         }
     }
 }
+.booklist{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+
+    .card-booklist{
+        display: flex;
+        align-items: center;
+
+        .booklist-thumbnail{
+            height: 140px;
+            aspect-ratio: 10/16;
+            object-fit: cover;
+        }
+    }
+
+}

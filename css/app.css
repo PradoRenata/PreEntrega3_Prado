@@ -1,6 +1,23 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+.container-books {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin: 4rem 2rem;
+  gap: 20px;
+}
+.container-books .card-book {
+  width: 200px;
+}
+.container-books .card-book .book-thumbnail {
+  aspect-ratio: 10/16;
+  object-fit: cover;
 }
 
 /*# sourceMappingURL=app.css.map */

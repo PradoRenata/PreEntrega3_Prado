@@ -70,7 +70,8 @@ for (const book of books) {
                 <button type="button" class="btn btn-dark list-group-item" onclick="addToMyBooklist('${book.id}')" id="add-${book.id}">Agregar a mi lista</button>
             </div>
         </div>
-    </div>`;}
+    </div>`;
+}
 
 //----------- MOSTRAR MI LISTA / ACTUALIZADA SI TIENE LISBROS INGRESADOS
 let myListOfBooks = [];
@@ -96,6 +97,16 @@ function updateButtonState() {
     });
 }
 
+//----------- ALERT
+function showSuccessToast(message) {
+    const successToast = new bootstrap.Toast(document.getElementById('success-toast'));
+    const toastBody = document.querySelector('#success-toast .toast-body');
+    
+    toastBody.textContent = message;
+
+    successToast.show();
+  }
+
 
 //----------- AGREGAR A LA LISTA    
 function addToMyBooklist(id){
@@ -113,8 +124,10 @@ function addToMyBooklist(id){
 
         showBooklist();
         updateButtonState();
+        showSuccessToast(`El libro "${lectures.title}" fué agregado a tu lista.`);
     }
 }
+
 
 //----------- BORRAR LIBRO DE LA LISTA
 const BooklistElement = document.querySelector('.booklist');

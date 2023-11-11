@@ -1,4 +1,4 @@
-const books = [
+const defaultBooks = [
     {
         id: 'a123',
         title: 'Cien años de soledad',
@@ -55,9 +55,17 @@ const books = [
     },
 ];
 
-
 //----------- LISTAR LIBROS 
+let books = [];
+
+// ----------- CONTENEDOR LISTAR LIBROS
 const container = document.querySelector('.container-books');
+
+// Intenta obtener la lista de libros del localStorage
+const storedBooks = localStorage.getItem('books');
+
+// Usa la lista predeterminada si no hay libros en el localStorage
+books = storedBooks ? JSON.parse(storedBooks) : defaultBooks;
 
 for (const book of books) {
     container.innerHTML += `
@@ -73,7 +81,7 @@ for (const book of books) {
     </div>`;
 }
 
-//----------- MOSTRAR MI LISTA / ACTUALIZADA SI TIENE LISBROS INGRESADOS
+//----------- MOSTRAR MI LISTA / ACTUALIZADA SI TIENE LIBROS INGRESADOS
 let myListOfBooks = [];
 
 if (localStorage.getItem('listOfBooks')){
@@ -218,6 +226,8 @@ function addBook(e){
 
         books.push(newBook);
 
+        localStorage.setItem('books', JSON.stringify(books));
+
         container.innerHTML += ` 
         <div id=${newBook.id} class="card card-book">
         <img src=${newBook.image} alt="Portada ${newBook.title}" class="book-thumbnail">
@@ -234,14 +244,12 @@ function addBook(e){
 
         formBook.reset();
 
-        message.innerHTML = `${newBook.title}, agregado con exito!`
+        message.innerHTML = `<div class="alert alert-success container-fluid col-6" role="alert">${newBook.title}, agregado con exito!</div>`
     } else {
-        message.innerHTML = `Por favor. Completa todos los campos.`
+        message.innerHTML = `<div class="alert alert-danger container-fluid col-6" role="alert">Por favor. Completa todos los campos.</div>`
     }
 
 }
 
 showBooklist();
 updateButtonState();
-
-

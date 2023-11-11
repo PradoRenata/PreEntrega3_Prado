@@ -18,8 +18,7 @@
                     Librero
                 </a>
                 <div>
-                    <!-- <button type="button" class="btn btn-outline-dark"><a href="pages/form.html" class="text-decoration-none button-add-book">Añadir Libro</a></button> -->
-                    <button type="button" class="btn btn-outline-dark"><a href="#form" class="text-decoration-none button-add-book">Añadir Libro</a></button>
+                    <button type="button" class="btn btn-outline-dark"><a href="pages/form.html" class="text-decoration-none button-add-book">Añadir Libro</a></button>
                     <button class="btn btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fa-solid fa-book-bookmark pe-2"></i>Mi lista</button>
                 </div>
 
@@ -38,7 +37,7 @@
         <h1 class="text-center my-4">Librería digital</h1>
         <p class="text-center">Acá encontrarás los libros que puedes agregar a tu lista, y así llevar un registro de tus lecturas.</p>
 
-        <div id="success-toast" class="toast align-items-center text-light bg-success border-0 position-fixed bottom-0 end-0 m-4" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="success-toast" class="toast align-items-center text-light bg-success border-0 position-fixed bottom-0 end-0 m-4" role="alert" aria-live="assertive" aria-atomic="true" style="z-index:1">
             <div class="d-flex">
               <div class="toast-body"></div>
               <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -46,36 +45,8 @@
           </div>
 
         <section class="container-books"></section>
-    
-        
-        <section id="form" class="container-fluid col-8 p-4 my-5 bg-light">
-            <div id="liveAlertPlaceholder"></div>
-            <h2 class="text-center my-2">Añade un libro a la biblioteca</h2>
-            <p class="text-center">Debes rellenar todos los campos para completar la acción.</p>
-
-            <p id="message"></p>
-            <form id="form-book">
-                <div class="mb-3">
-                    <label for="title" class="form-label">Titulo del libro</label>
-                    <input type="text" class="form-control" id="title">
-                </div>
-                <div class="mb-3">
-                    <label for="autor" class="form-label">Nombre del autor</label>
-                    <input type="text" class="form-control" id="autor">
-                </div>
-                <div class="mb-3">
-                    <label for="image" class="form-label">URL Imágen de portada</label>
-                    <input type="text" class="form-control" id="image">
-                    <div id="emailHelp" class="form-text">Puedes encontrar las imágenes en <a target="_blank" href="https://www.buscalibre.cl/">Busca Libre</a></div>
-                </div>
-           
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button type="submit" class="btn btn-dark">Agregar</button>
-                </div>
-            </form>
-        </section>
     </main>
-    
+
     <footer>
         <div class="container-fluid bg-dark py-3">
             <p class="text-center text-light">Página creada por Renata Prado para Curso de Javascript en CoderHouse</p>

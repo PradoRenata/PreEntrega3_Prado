@@ -1,74 +1,33 @@
-const defaultBooks = [
-    {
-        id: 'a123',
-        title: 'Cien años de soledad',
-        autor: 'Gabriel García Márquez',
-        image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/b9/d5/b9d5d415d11423d0f9e98074ee6997d9.jpg',
-    },
-    {
-        id: 'a124',
-        title: 'Tengo miedo torero',
-        autor: 'Pedro Lemebel',
-        image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/be/99/be990f369aaedd92ce55ad2c925a60e2.jpg',
-    },
-    {
-        id: 'a125',
-        title: 'Solanin',
-        autor: 'Inio Asano',
-        image: 'https://images.cdn2.buscalibre.com/fit-in/360x360/52/7d/527d3ed4471d0f801a5df62d963a1e84.jpg',
-    },
-    {
-        id: 'a126',
-        title: 'Trilogía de la fundación',
-        autor: 'Isaac Asimov',
-        image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/b1/6d/b16d510807679d5fe523b96c5a90f14e.jpg',
-    },
-    {
-        id: 'a127',
-        title: 'Armada',
-        autor: 'Ernest Cline',
-        image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/32/5e/325e77f76321dab3d567479347573c87.jpg',
-    },
-    {
-        id: 'a128',
-        title: 'Carrie',
-        autor: 'Stephen King',
-        image: 'https://images.cdn1.buscalibre.com/fit-in/360x360/46/80/4680f1138f6d913f1dcade06b4c06e4b.jpg',
-    },
-    {
-        id: 'a129',
-        title: 'Los hijos de Húrin',
-        autor: 'J.R.R Tolkien',
-        image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/60/a5/60a5fe0237975ca21e1e950c586c3307.jpg',
-    },
-    {
-        id: 'a120',
-        title: 'La mujer que soy',
-        autor: 'Britney Spears',
-        image: 'https://images.cdn1.buscalibre.com/fit-in/360x360/d2/ae/d2aebc204783107b162198290118bee9.jpg',
-    },
-    {
-        id: 'a121',
-        title: 'Humano Es',
-        autor: 'Philip K. Dick',
-        image: 'https://images.cdn3.buscalibre.com/fit-in/360x360/7a/95/7a95f2681a07bbf37e6108a906c43ccb.jpg',
-    },
-];
-
-//----------- LISTAR LIBROS 
-let books = [];
-
 // ----------- CONTENEDOR LISTAR LIBROS
 const container = document.querySelector('.container-books');
 
-// Intenta obtener la lista de libros del localStorage
-const storedBooks = localStorage.getItem('books');
+// ----------- LISTA DE LIBROS
+let books = [];
 
-// Usa la lista predeterminada si no hay libros en el localStorage
-books = storedBooks ? JSON.parse(storedBooks) : defaultBooks;
+function listBooks() {
+    fetch('../data/books.json')
+        .then(response => response.json())
+        .then(data => {
+            if (!localStorage.getItem('books')) {
+                books = data;
+                localStorage.setItem('books', JSON.stringify(books));
+            } else {
+                books = JSON.parse(localStorage.getItem('books'));
+            }
 
-for (const book of books) {
-    container.innerHTML += `
+            renderBooks();
+        })
+        .catch(error => console.error('Error al cargar libros:', error));
+}
+
+function renderBooks() {
+    for (const book of books) {
+        container.innerHTML += renderBook(book);
+    }
+}
+
+function renderBook(book) {
+    return `
     <div id=${book.id} class="card card-book">
         <img src=${book.image} alt="Portada ${book.title}" class="book-thumbnail">
         <div class="card-body">
@@ -80,6 +39,8 @@ for (const book of books) {
         </div>
     </div>`;
 }
+
+listBooks();
 
 //----------- MOSTRAR MI LISTA / ACTUALIZADA SI TIENE LIBROS INGRESADOS
 let myListOfBooks = [];
@@ -113,7 +74,7 @@ function showSuccessToast(message) {
     toastBody.textContent = message;
 
     successToast.show();
-  }
+}
 
 
 //----------- AGREGAR A LA LISTA    
@@ -205,9 +166,15 @@ updateButtonState();
 const formBook = document.querySelector('#form-book');
 const message = document.querySelector('#message')
 
-let nextId = 1;
+let nextId = parseInt(localStorage.getItem('nextId')) || 1; //GUARDA LA NUEVA ID PARA USARLA DE REFERENCIA AUNQUE SE RECARGUE LA PAGINA
 
 formBook.addEventListener('submit', addBook);
+
+function generateUniqueId() { //GENERA UNA ID UNICA
+    const newId = `book-${nextId++}`;
+    localStorage.setItem('nextId', nextId); 
+    return newId;
+}
 
 function addBook(e){
     e.preventDefault();
@@ -218,38 +185,26 @@ function addBook(e){
 
     if(title && autor && image){
         const newBook = {
-            id: `book-${nextId}`,
+            id: generateUniqueId(),
             title,
             autor,
             image,
         }
 
-        books.push(newBook);
+        books.push(newBook); //AGREGA A LA LISTA DE LIBROS
 
-        localStorage.setItem('books', JSON.stringify(books));
+        localStorage.setItem('books', JSON.stringify(books)); //GUARDA EN EL LOCAL STORAGE
 
-        container.innerHTML += ` 
-        <div id=${newBook.id} class="card card-book">
-        <img src=${newBook.image} alt="Portada ${newBook.title}" class="book-thumbnail">
-        <div class="card-body">
-            <h4 class="card-title">${newBook.title}</h4>
-            <p class="card-text">${newBook.autor}</p>
-            <div class="list-group">
-                <button type="button" class="btn btn-dark list-group-item" onclick="addToMyBooklist('${newBook.id}')" id="add-${newBook.id}">Agregar a mi lista</button>
-            </div>
-        </div>
-    </div>`;
-
-        nextId++;
+        container.innerHTML += renderBook(newBook); //RENDERIZA EL NUEVO LIBRO EN EL CONTENEDOR
 
         formBook.reset();
-
         message.innerHTML = `<div class="alert alert-success container-fluid col-6" role="alert">${newBook.title}, agregado con exito!</div>`
     } else {
         message.innerHTML = `<div class="alert alert-danger container-fluid col-6" role="alert">Por favor. Completa todos los campos.</div>`
     }
 
 }
+
 
 showBooklist();
 updateButtonState();
